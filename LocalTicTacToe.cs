@@ -22,7 +22,7 @@ public static class LocalTicTacToe
                     Console.WriteLine("ERROR");
                 }
             } while (!moveWorked);
-        } while (game.Winner == Player.None);
+        } while (!game.GameOver);
 
         Console.Clear();
         game.PrintField();

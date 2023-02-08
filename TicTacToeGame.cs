@@ -6,14 +6,17 @@ public sealed class TicTacToeGame
     private const char PlayerOneSymbol = 'O';
     private const char PlayerTwoSymbol = 'X';
     private readonly Player[,] _field;
+    private int _moveCount;
 
     public Player CurrentPlayer { get; private set; }
+    public bool GameOver => Winner != Player.None || _moveCount >= Size * Size;
     public Player Winner { get; private set; }
 
     public TicTacToeGame(Player startingPlayer)
     {
         CurrentPlayer = startingPlayer;
         _field = CreateField(Size);
+        _moveCount = 0;
     }
 
     public static Player GetRandomPlayer()
@@ -68,13 +71,16 @@ public sealed class TicTacToeGame
 
     public bool Move(int row, int column)
     {
-        if (Winner != Player.None
+        if (GameOver
+            || Winner != Player.None
             || _field[row, column] != Player.None
             || row is < 0 or >= Size 
             || column is < 0 or >= Size)
         {
             return false;
         }
+
+        _moveCount++;
 
         _field[row, column] = CurrentPlayer;
 

@@ -72,7 +72,7 @@ public static class OnlineTicTacToe
                 stream.Read(bytes, 0, bytes.Length);
                 game.Move(bytes[0], bytes[1]);
             }
-        } while (game.Winner == Player.None);
+        } while (!game.GameOver);
 
         Console.Clear();
         game.PrintField();
