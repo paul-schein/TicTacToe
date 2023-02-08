@@ -1,21 +1,18 @@
-﻿using System.Diagnostics;
-using System.Runtime.InteropServices.JavaScript;
+﻿namespace TicTacToe;
 
-namespace TicTacToe;
-
-public sealed class TicTacToeBoard
+public sealed class TicTacToeGame
 {
-    private const int Size = 3;
+    public const int Size = 3;
     private const char PlayerOneSymbol = 'O';
     private const char PlayerTwoSymbol = 'X';
-    private Player _currentPlayer;
     private readonly Player[,] _field;
 
+    public Player CurrentPlayer { get; private set; }
     public Player Winner { get; private set; }
 
-    public TicTacToeBoard(Player startingPlayer = Player.One)
+    public TicTacToeGame(Player startingPlayer = Player.One)
     {
-        _currentPlayer = startingPlayer;
+        CurrentPlayer = startingPlayer;
         _field = CreateField(Size);
     }
 
@@ -29,12 +26,12 @@ public sealed class TicTacToeBoard
             bool wonColumn = true;
             for (int j = 0; j < Size; j++)
             {
-                if (_field[i, j] != _currentPlayer)
+                if (_field[i, j] != CurrentPlayer)
                 {
                     wonRow = false;
                 }
 
-                if (_field[j, i] != _currentPlayer)
+                if (_field[j, i] != CurrentPlayer)
                 {
                     wonColumn = false;
                 }
@@ -42,14 +39,14 @@ public sealed class TicTacToeBoard
 
             if (wonRow || wonColumn)
             {
-                return _currentPlayer;
+                return CurrentPlayer;
             }
 
-            if (_field[i, i] != _currentPlayer)
+            if (_field[i, i] != CurrentPlayer)
             {
                 diagonal0Won = false;
             }
-            if (_field[Size - i - 1, Size - i - 1] != _currentPlayer)
+            if (_field[i, Size - i - 1] != CurrentPlayer)
             {
                 diagonal1Won = false;
             }
@@ -57,26 +54,27 @@ public sealed class TicTacToeBoard
 
         if (diagonal0Won || diagonal1Won)
         {
-            return _currentPlayer;
+            return CurrentPlayer;
         }
 
         return Player.None;
     }
 
-    public bool MakeMove(int row, int column)
+    public bool Move(int row, int column)
     {
         if (Winner != Player.None
+            || _field[row, column] != Player.None
             || row is < 0 or >= Size 
             || column is < 0 or >= Size)
         {
             return false;
         }
 
-        _field[row, column] = _currentPlayer;
+        _field[row, column] = CurrentPlayer;
 
         Winner = GetWinner();
 
-        _currentPlayer = _currentPlayer == Player.One ? Player.Two : Player.One;
+        CurrentPlayer = CurrentPlayer == Player.One ? Player.Two : Player.One;
 
         return true;
     }
@@ -120,11 +118,11 @@ public sealed class TicTacToeBoard
             _ => ' '
         };
     }
+}
 
-    public enum Player
-    {
-        None,
-        One,
-        Two
-    }
+public enum Player
+{
+    None,
+    One,
+    Two
 }
