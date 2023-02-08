@@ -4,7 +4,7 @@ public static class LocalTicTacToe
 {
     public static Player Run()
     {
-        TicTacToeGame game = new TicTacToeGame(Player.One);
+        TicTacToeGame game = new TicTacToeGame(TicTacToeGame.GetRandomPlayer());
 
         do
         {

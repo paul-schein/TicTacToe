@@ -36,12 +36,25 @@ public static class OnlineTicTacToe
         }
         NetworkStream stream = client.GetStream();
 
-        return Play(stream, player);
+        Player startingPlayer;
+        if (player == Player.One)
+        {
+            startingPlayer = TicTacToeGame.GetRandomPlayer();
+            stream.Write(new byte[] { (byte)startingPlayer });
+        }
+        else
+        {
+            byte[] bytes = new byte[1];
+            stream.Read(bytes, 0, bytes.Length);
+            startingPlayer = (Player)bytes[0];
+        }
+
+        return Play(stream, player, startingPlayer);
     }
 
-    private static Player Play(NetworkStream stream, Player player)
+    private static Player Play(NetworkStream stream, Player player, Player startingPlayer)
     {
-        TicTacToeGame game = new TicTacToeGame(Player.One);
+        TicTacToeGame game = new TicTacToeGame(startingPlayer);
         Byte[] bytes = new Byte[2];
 
         do
