@@ -10,10 +10,16 @@ public sealed class TicTacToeGame
     public Player CurrentPlayer { get; private set; }
     public Player Winner { get; private set; }
 
-    public TicTacToeGame(Player startingPlayer = Player.One)
+    public TicTacToeGame(Player startingPlayer)
     {
         CurrentPlayer = startingPlayer;
         _field = CreateField(Size);
+    }
+
+    public static Player GetRandomPlayer()
+    {
+        Random random = new Random();
+        return (Player)random.Next((int)Player.One, (int)Player.Two + 1);
     }
 
     public Player GetWinner()
@@ -122,7 +128,7 @@ public sealed class TicTacToeGame
 
 public enum Player
 {
-    None,
-    One,
-    Two
+    None = 0,
+    One = 1,
+    Two = 2
 }

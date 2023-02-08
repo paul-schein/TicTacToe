@@ -4,10 +4,13 @@ public static class LocalTicTacToe
 {
     public static Player Run()
     {
-        TicTacToeGame game = new TicTacToeGame();
+        TicTacToeGame game = new TicTacToeGame(Player.One);
 
         do
         {
+            Console.Clear();
+            game.PrintField();
+
             var moveWorked = false;
             do
             {

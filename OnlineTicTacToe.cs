@@ -1,9 +1,6 @@
-﻿using System;
-using System.Data.Common;
-using System.IO;
-using System.Net;
+﻿using System.Net;
 using System.Net.Sockets;
-using System.Text;
+using System.Numerics;
 
 namespace TicTacToe;
 
@@ -13,29 +10,38 @@ public static class OnlineTicTacToe
 
     public static Player Run()
     {
-        Console.Write("Are you the host (y/n): ");
+        Player player;
+        TcpClient client = new TcpClient();
+
+        Console.Write("Are you the host? (y/n): ");
         switch (Console.ReadLine())
         {
             case "y":
             {
-                return Host();
+                player = Player.One;
+                var server = new TcpListener(IPAddress.Parse("127.0.0.1"), Port);
+                server.Start();
+
+                Console.WriteLine("Waiting for connection...");
+                client = server.AcceptTcpClient();
+                break;
             }
             default:
             {
-                return Client();
+                player = Player.Two;
+                Console.Write("Enter host IP: ");
+                client.Connect(Console.ReadLine() ?? string.Empty, 42069);
+                break;
             }
         }
+        NetworkStream stream = client.GetStream();
+
+        return Play(stream, player);
     }
 
-    private static Player Client()
+    private static Player Play(NetworkStream stream, Player player)
     {
-        TicTacToeGame game = new TicTacToeGame();
-        var client = new TcpClient();
-
-        Console.Write("Enter host IP: ");
-        client.Connect(Console.ReadLine() ?? string.Empty, 42069);
-
-        NetworkStream stream = client.GetStream();
+        TicTacToeGame game = new TicTacToeGame(Player.One);
         Byte[] bytes = new Byte[2];
 
         do
@@ -43,41 +49,7 @@ public static class OnlineTicTacToe
             Console.Clear();
             game.PrintField();
 
-            if (game.CurrentPlayer == Player.Two)
-            {
-                stream.Write(OwnMove(game));
-            }
-            else
-            {
-                Console.WriteLine("Waiting for opponents move...");
-                stream.Read(bytes, 0, bytes.Length);
-                game.Move(bytes[0], bytes[1]);
-            }
-        } while (game.Winner == Player.None);
-
-        Console.Clear();
-        game.PrintField();
-
-        return game.Winner;
-    }
-
-    private static Player Host()
-    {
-        TicTacToeGame game = new TicTacToeGame();
-        var server = new TcpListener(IPAddress.Parse("127.0.0.1"), Port);
-        server.Start();
-
-        Console.WriteLine("Waiting for connection...");
-        TcpClient client = server.AcceptTcpClient();
-        NetworkStream stream = client.GetStream();
-        Byte[] bytes = new Byte[2];
-
-        do
-        {
-            Console.Clear();
-            game.PrintField();
-
-            if (game.CurrentPlayer == Player.One)
+            if (game.CurrentPlayer == player)
             {
                 stream.Write(OwnMove(game));
             }
