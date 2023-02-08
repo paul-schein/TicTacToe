@@ -68,7 +68,7 @@ public static class OnlineTicTacToe
             }
             else
             {
-                Console.WriteLine("Waiting for opponents move...");
+                Console.WriteLine("Waiting for the opponent's move...");
                 stream.Read(bytes, 0, bytes.Length);
                 game.Move(bytes[0], bytes[1]);
             }
