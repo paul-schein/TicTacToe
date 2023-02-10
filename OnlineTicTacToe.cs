@@ -19,7 +19,7 @@ public static class OnlineTicTacToe
             case "y":
             {
                 player = Player.One;
-                var server = new TcpListener(IPAddress.Parse("127.0.0.1"), Port);
+                var server = new TcpListener(Port);
                 server.Start();
 
                 Console.WriteLine("Waiting for connection...");
