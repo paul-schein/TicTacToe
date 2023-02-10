@@ -11,7 +11,7 @@ public static class OnlineTicTacToe
     public static Player Run()
     {
         Player player;
-        TcpClient client = new TcpClient();
+        TcpClient client;
 
         Console.Write("Are you the host? (y/n): ");
         switch (Console.ReadLine())
@@ -19,7 +19,7 @@ public static class OnlineTicTacToe
             case "y":
             {
                 player = Player.One;
-                var server = new TcpListener(Port);
+                var server = new TcpListener(IPAddress.Any, Port);
                 server.Start();
 
                 Console.WriteLine("Waiting for connection...");
@@ -30,7 +30,7 @@ public static class OnlineTicTacToe
             {
                 player = Player.Two;
                 Console.Write("Enter host IP: ");
-                client.Connect(Console.ReadLine() ?? string.Empty, 42069);
+                client = new TcpClient((Console.ReadLine() ?? string.Empty), Port);
                 break;
             }
         }
