@@ -124,7 +124,6 @@ public sealed class TicTacToeGame
     {
         return player switch
         {
-            Player.None => ' ',
             Player.One => PlayerOneSymbol,
             Player.Two => PlayerTwoSymbol,
             _ => ' '
