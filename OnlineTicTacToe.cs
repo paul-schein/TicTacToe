@@ -5,7 +5,7 @@ namespace TicTacToe;
 
 public static class OnlineTicTacToe
 {
-    public const int Port = 22;
+    public const int Port = 55555;
 
     public static Player Run()
     {
