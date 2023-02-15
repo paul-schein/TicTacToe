@@ -1,12 +1,11 @@
 ﻿using System.Net;
 using System.Net.Sockets;
-using System.Numerics;
 
 namespace TicTacToe;
 
 public static class OnlineTicTacToe
 {
-    public const int Port = 42069;
+    public const int Port = 22;
 
     public static Player Run()
     {
@@ -30,7 +29,7 @@ public static class OnlineTicTacToe
             {
                 player = Player.Two;
                 Console.Write("Enter host IP: ");
-                client = new TcpClient((Console.ReadLine() ?? string.Empty), Port);
+                client = new TcpClient(Console.ReadLine() ?? string.Empty, Port);
                 break;
             }
         }
